@@ -1,0 +1,30 @@
+services:
+  youtrack:
+    image: jetbrains/youtrack:2025.2.94372
+    restart: always
+    container_name: youtrack
+    hostname: ${YOUTRACK_DOMAIN}
+    environment:
+      VIRTUAL_HOST: ${YOUTRACK_DOMAIN}
+      LETSENCRYPT_HOST: ${YOUTRACK_DOMAIN}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      YOUTRACK_BASE_URL: "${YOUTRACK_BASE_URL}"
+    expose:
+      - "8080"
+    volumes:
+      - youtrack-data:/opt/youtrack/data
+      - youtrack-conf:/opt/youtrack/conf
+      - youtrack-logs:/opt/youtrack/logs
+      - youtrack-backups:/opt/youtrack/backups
+    networks:
+      - nginx_proxy-tier
+
+volumes:
+  youtrack-data:
+  youtrack-conf:
+  youtrack-logs:
+  youtrack-backups:
+
+networks:
+  nginx_proxy-tier:
+    external: true
