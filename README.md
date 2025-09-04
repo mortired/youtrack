@@ -1,11 +1,12 @@
 # YouTrack Docker Setup
 
-This repository contains a Docker Compose configuration for running YouTrack, a project management and issue tracking tool by JetBrains.
+This repository contains a Docker Compose configuration for running YouTrack, a project management and issue tracking tool by JetBrains, with nginx-proxy and automatic SSL certificates via Let's Encrypt.
 
 ## Prerequisites
 
 - Docker
 - Docker Compose
+- nginx-proxy network (external network named `nginx_proxy-tier`)
 
 ## Quick Start
 
@@ -20,8 +21,7 @@ This repository contains a Docker Compose configuration for running YouTrack, a 
    ```env
    YOUTRACK_DOMAIN=your-domain.com
    YOUTRACK_BASE_URL=https://your-domain.com
-   YOUTRACK_HTTP_PORT=8080
-   YOUTRACK_HTTPS_PORT=8443
+   LETSENCRYPT_EMAIL=your-email@example.com
    ```
 
 3. **Start YouTrack:**
@@ -30,8 +30,7 @@ This repository contains a Docker Compose configuration for running YouTrack, a 
    ```
 
 4. **Access YouTrack:**
-   - HTTP: `http://localhost:8080`
-   - HTTPS: `https://localhost:8443`
+   - HTTPS: `https://your-domain.com` (automatically secured with Let's Encrypt SSL)
 
 ## Management Commands
 
@@ -60,4 +59,11 @@ The following data is persisted in Docker volumes:
 
 ## Configuration
 
-YouTrack runs on version `2025.2.94372` with automatic restart enabled. Modify the `.env` file to change ports, domain, or base URL as needed.
+YouTrack runs on version `2025.2.94372` with automatic restart enabled. The setup includes:
+
+- **nginx-proxy integration**: Automatic reverse proxy configuration
+- **Let's Encrypt SSL**: Automatic SSL certificate generation and renewal
+- **External network**: Uses `nginx_proxy-tier` network for proxy communication
+- **Exposed port**: YouTrack runs on internal port 8080 (exposed to nginx-proxy)
+
+Modify the `.env` file to change domain, base URL, or Let's Encrypt email as needed.
